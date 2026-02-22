@@ -1,0 +1,31 @@
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Node modules (si usas npm en el futuro)
+node_modules/
+
+# Archivos personales de prueba
+test.csv
+prueba.csv
+*.backup

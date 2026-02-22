@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Automatico de Horas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px;
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: #f0f4ff;
+            border-color: #5568d3;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-secondary {
+            background: #28a745;
+        }
+
+        .button-secondary:hover {
+            background: #218838;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e1e8ed;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-item.success {
+            border-left-color: #28a745;
+        }
+
+        .result-item.error {
+            border-left-color: #dc3545;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #ffc107;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .status-completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro Automatico de Horas</h1>
+        <p class="subtitle">Automatiza el registro de tus horas de trabajo desde un archivo CSV</p>
+
+        <div class="info">
+            <strong>Proceso automatico:</strong> Esta aplicacion cargara tu CSV, obtendra el token de autenticacion, transformara los datos y registrara las horas en la API de forma secuencial.
+        </div>
+
+        <!-- Paso 1: Carga del CSV -->
+        <div class="section">
+            <div class="section-title">Paso 1: Cargar archivo CSV</div>
+            <div class="file-input-wrapper">
+                <label class="file-input-label" for="csvFile">
+                    <span id="fileText">Haz clic aqui o arrastra tu archivo CSV</span>
+                </label>
+                <input type="file" id="csvFile" class="file-input" accept=".csv">
+            </div>
+            <div id="fileName" class="file-name"></div>
+        </div>
+
+        <!-- Paso 2: Configuración -->
+        <div class="section">
+            <div class="section-title">Paso 2: Configuracion</div>
+            <div class="input-group">
+                <label for="userId">User ID (uid para los headers):</label>
+                <input type="text" id="userId" placeholder="Ingresa tu User ID">
+            </div>
+            <div class="input-group">
+                <label for="projectId">ID del Proyecto por defecto:</label>
+                <input type="text" id="projectId" placeholder="ID del proyecto">
+            </div>
+        </div>
+
+        <!-- Paso 3: Autenticación -->
+        <div class="section">
+            <div class="section-title">Paso 3: Autenticacion</div>
+            <div class="info">
+                <strong>Nuevo:</strong> Ahora puedes iniciar sesion en una ventana emergente y el token se capturara automaticamente.
+            </div>
+            <div class="input-group">
+                <label for="bearerToken">Bearer Token:</label>
+                <input type="text" id="bearerToken" placeholder="Se capturara automaticamente al iniciar sesion" readonly>
+            </div>
+            <button class="button" id="getTokenBtn">Iniciar Sesion y Capturar Token</button>
+            <div id="tokenStatus" style="margin-top: 10px; font-size: 14px;"></div>
+        </div>
+
+        <!-- Paso 4: Ejecutar -->
+        <div class="section">
+            <div class="section-title">Paso 4: Procesar y Registrar</div>
+            <button class="button button-secondary" id="processBtn" disabled>Iniciar Proceso</button>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <div class="progress-text" id="progressText">Preparando...</div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="results" id="results">
+            <div class="section-title">Resultados</div>
+            <div class="summary">
+                <div class="summary-card">
+                    <div class="summary-number" id="totalRecords">0</div>
+                    <div class="summary-label">Total Registros</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number" id="successRecords" style="color: #28a745;">0</div>
+                    <div class="summary-label">Exitosos</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number" id="errorRecords" style="color: #dc3545;">0</div>
+                    <div class="summary-label">Fallidos</div>
+                </div>
+            </div>
+            <div class="error-list" id="errorList"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

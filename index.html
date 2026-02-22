@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Automático de Horas - OurSofka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 60px 20px 40px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .main-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0 50px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .content-box h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 28px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .step {
+            position: relative;
+            padding: 25px 25px 25px 80px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .step h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .step code {
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d63384;
+        }
+
+        .step img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #0c5460;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #856404;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #155724;
+            color: #155724;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px 20px;
+            opacity: 0.9;
+        }
+
+        .download-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .download-box h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .download-box p {
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .btn-download {
+            background: white;
+            color: #667eea;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            .main-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .content-box {
+                padding: 25px;
+            }
+
+            .step {
+                padding: 20px 20px 20px 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚡ Registro Automático de Horas</h1>
+            <p>Automatiza el registro de tus horas de trabajo en OurSofka desde un archivo CSV</p>
+        </div>
+
+        <!-- Main Buttons -->
+        <div class="main-buttons">
+            <a href="app.html" class="btn btn-primary">
+                <span>🚀</span>
+                <span>Ir a la Aplicación</span>
+            </a>
+            <a href="#instalacion" class="btn btn-secondary">
+                <span>📖</span>
+                <span>Ver Instrucciones</span>
+            </a>
+        </div>
+
+        <!-- Features -->
+        <div class="content-box">
+            <h2>✨ Características</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📁</div>
+                    <h3>Carga CSV</h3>
+                    <p>Importa tus registros de horas desde un archivo CSV con formato simple</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Autenticación Automática</h3>
+                    <p>Captura automática del token de sesión de OurSofka mediante extensión</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Transformación de Datos</h3>
+                    <p>Convierte minutos a horas, fechas a timestamps, y clasifica tipos de trabajo</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Registro Secuencial</h3>
+                    <p>Envía los registros uno por uno a la API con barra de progreso en tiempo real</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Installation Instructions -->
+        <div class="content-box" id="instalacion">
+            <h2>📦 Instalación de la Extensión</h2>
+            
+            <div class="alert alert-info">
+                <strong>Nota:</strong> Solo necesitas instalar la extensión una vez. Toma aproximadamente 2 minutos.
+            </div>
+
+            <div class="download-box">
+                <h3>📥 Descargar Extensión</h3>
+                <p>Descarga el archivo ZIP de la extensión de Chrome para capturar el token automáticamente</p>
+                <a href="chrome-extension.zip" class="btn-download" download>
+                    ⬇️ Descargar chrome-extension.zip
+                </a>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <h3>Descargar la Extensión</h3>
+                    <p>Haz clic en el botón de arriba para descargar <code>chrome-extension.zip</code> a tu computadora.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Extraer el Archivo ZIP</h3>
+                    <p>Click derecho en el archivo descargado → "Extraer aquí" o "Extract Here". Te creará una carpeta llamada <code>chrome-extension</code>.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Abrir Extensiones de Chrome</h3>
+                    <p>Abre Google Chrome y ve a: <code>chrome://extensions/</code></p>
+                    <p>O desde el menú: <strong>Menú (⋮)</strong> → <strong>Más herramientas</strong> → <strong>Extensiones</strong></p>
+                </div>
+
+                <div class="step">
+                    <h3>Activar Modo Desarrollador</h3>
+                    <p>En la esquina superior derecha, activa el switch <strong>"Modo de desarrollador"</strong>.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Cargar la Extensión</h3>
+                    <p>Click en el botón <strong>"Cargar extensión sin empaquetar"</strong>.</p>
+                    <p>Selecciona la carpeta <code>chrome-extension</code> que extrajiste en el paso 2.</p>
+                </div>
+
+                <div class="step">
+                    <h3>¡Listo!</h3>
+                    <p>Deberías ver la extensión <strong>"OurSofka Token Capturer"</strong> instalada y activada.</p>
+                    <p>Ahora puedes usar la aplicación para registrar tus horas automáticamente.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>Advertencia:</strong> Chrome mostrará un mensaje de "Extensiones en modo desarrollador". Es normal y seguro. Solo ignóralo.
+            </div>
+        </div>
+
+        <!-- How to Use -->
+        <div class="content-box">
+            <h2>🚀 Cómo Usar la Aplicación</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <h3>Preparar tu CSV</h3>
+                    <p>Asegúrate de que tu archivo CSV tenga las columnas requeridas:</p>
+                    <p><code>minutes</code>, <code>date</code>, <code>type</code>, <code>comment</code></p>
+                </div>
+
+                <div class="step">
+                    <h3>Ir a la Aplicación</h3>
+                    <p>Haz clic en el botón <strong>"Ir a la Aplicación"</strong> en la parte superior de esta página.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Cargar tu CSV</h3>
+                    <p>En el <strong>Paso 1</strong>, selecciona tu archivo CSV desde tu computadora.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Capturar Token</h3>
+                    <p>En el <strong>Paso 3</strong>, haz clic en <strong>"Iniciar Sesión y Capturar Token"</strong>.</p>
+                    <p>Se abrirá una ventana de OurSofka. Inicia sesión si es necesario.</p>
+                    <p>El token y el User ID se capturarán automáticamente y la ventana se cerrará sola.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Verificar Configuración</h3>
+                    <p>En el <strong>Paso 2</strong>, verifica que:</p>
+                    <p>• <strong>User ID</strong> se haya llenado automáticamente</p>
+                    <p>• <strong>Project ID</strong> tenga el ID correcto de tu proyecto</p>
+                </div>
+
+                <div class="step">
+                    <h3>Procesar y Registrar</h3>
+                    <p>En el <strong>Paso 4</strong>, haz clic en <strong>"Iniciar Proceso"</strong>.</p>
+                    <p>Verás una barra de progreso mientras se registran tus horas automáticamente.</p>
+                    <p>Al finalizar, verás un resumen con registros exitosos y fallidos.</p>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>¡Eso es todo!</strong> Tus horas se habrán registrado automáticamente en OurSofka.
+            </div>
+        </div>
+
+        <!-- CSV Format -->
+        <div class="content-box">
+            <h2>📋 Formato del CSV</h2>
+            
+            <p style="margin-bottom: 20px;">Tu archivo CSV debe tener este formato:</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto;">
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 14px;">minutes,date,type,comment
+120,2026-02-10,Desarrollo,"Implementación de login"
+60,2026-02-10,Documentación,"Actualizar README"
+180,2026-02-11,Desarrollo,"Fix de bugs en API"
+30,2026-02-11,EventosScrum,"Daily standup"</pre>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="color: #333; margin-bottom: 10px;">Columnas requeridas:</h3>
+                <ul style="color: #666; line-height: 1.8; margin-left: 20px;">
+                    <li><code>minutes</code> - Cantidad de minutos trabajados</li>
+                    <li><code>date</code> - Fecha en formato YYYY-MM-DD</li>
+                    <li><code>type</code> - Tipo de trabajo (Desarrollo, Documentación, HoraExtra, etc.)</li>
+                    <li><code>comment</code> - Descripción del trabajo realizado</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-info" style="margin-top: 20px;">
+                <strong>Horas Extras:</strong> Si <code>type</code> es "HoraExtra", puedes usar el formato especial en <code>comment</code>:<br>
+                <code>08:00-11:00/Descripción del trabajo</code> (calcula las horas automáticamente)
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="content-box">
+            <h2>❓ Preguntas Frecuentes</h2>
+            
+            <div style="margin-top: 20px;">
+                <h3 style="color: #333; margin-bottom: 10px;">¿Es seguro usar esta herramienta?</h3>
+                <p style="color: #666; margin-bottom: 20px;">Sí, toda la información se procesa en tu navegador. El token nunca se almacena en servidores externos.</p>
+
+                <h3 style="color: #333; margin-bottom: 10px;">¿Puedo usar esto en otros navegadores?</h3>
+                <p style="color: #666; margin-bottom: 20px;">Actualmente solo está disponible para Google Chrome y navegadores basados en Chromium (Edge, Brave, etc.).</p>
+
+                <h3 style="color: #333; margin-bottom: 10px;">¿Qué hago si aparece un error?</h3>
+                <p style="color: #666; margin-bottom: 20px;">Verifica que tu token sea válido, que tu sesión no haya expirado, y que el formato del CSV sea correcto.</p>
+
+                <h3 style="color: #333; margin-bottom: 10px;">¿Cuántos registros puedo procesar a la vez?</h3>
+                <p style="color: #666; margin-bottom: 20px;">No hay límite técnico, pero se recomienda procesar lotes de hasta 100 registros por vez para mejor rendimiento.</p>
+
+                <h3 style="color: #333; margin-bottom: 10px;">¿El token expira?</h3>
+                <p style="color: #666; margin-bottom: 20px;">Sí, el token de OurSofka expira cuando cierras sesión o después de cierto tiempo de inactividad. Simplemente captura uno nuevo cuando sea necesario.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Desarrollado con ❤️ para automatizar tu trabajo diario</p>
+            <p style="margin-top: 10px; font-size: 14px;">Versión 1.0.0</p>
+        </div>
+    </div>
+</body>
+</html>
