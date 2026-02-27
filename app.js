@@ -318,18 +318,38 @@ function convertDateToTimestamp(dateString) {
         return parseInt(dateString);
     }
     
-    // Si es formato ISO o compatible con Date.parse
-    date = new Date(dateString);
+    // Si es formato YYYY-MM-DD (ISO), parsearlo correctamente evitando problemas de zona horaria
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [year, month, day] = dateString.split('-').map(Number);
+        // Usar mediodía (12:00) en hora local para evitar problemas de zona horaria
+        date = new Date(year, month - 1, day, 12, 0, 0);
+        return date.getTime();
+    }
     
-    if (isNaN(date.getTime())) {
-        // Intentar formato DD/MM/YYYY
+    // Si es formato DD/MM/YYYY
+    if (dateString.includes('/')) {
         const parts = dateString.split('/');
         if (parts.length === 3) {
-            date = new Date(parts[2], parts[1] - 1, parts[0]);
+            // Asumiendo DD/MM/YYYY
+            const day = parseInt(parts[0]);
+            const month = parseInt(parts[1]);
+            const year = parseInt(parts[2]);
+            // Usar mediodía (12:00) en hora local
+            date = new Date(year, month - 1, day, 12, 0, 0);
+            return date.getTime();
         }
     }
     
-    return date.getTime();
+    // Fallback: intentar parsear como venga, pero agregar hora del mediodía
+    date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+        // Ajustar a mediodía del día en hora local
+        date.setHours(12, 0, 0, 0);
+        return date.getTime();
+    }
+    
+    // Si todo falla, retornar timestamp actual
+    return Date.now();
 }
 
 // ========== PASO 4: EJECUCIÓN DE POST SECUENCIALES ==========
